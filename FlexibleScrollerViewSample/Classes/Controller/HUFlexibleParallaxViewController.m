@@ -20,7 +20,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.navigationController.navigationBar fs_setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0]];
+    [self.navigationController.navigationBar fs_setBackgroundColor:[UIColor clearColor]];
     self.view.backgroundColor = [UIColor whiteColor];
     
     UIImageView *topView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"6.jpeg"]];
@@ -38,9 +38,15 @@
     flexibleView.delegate = self;
     [self.view addSubview:flexibleView];
     
+    UIImageView *imageV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"9.jpg"]];
+    imageV.frame = CGRectMake(20, CGRectGetMaxY(userView.frame), self.view.frame.size.width-40, 200);
+    imageV.layer.cornerRadius = 10;
+    imageV.layer.masksToBounds = YES;
+    
     [flexibleView addSubView:userView];
     [flexibleView addSubView:buttons];
-    [flexibleView setContentSize:CGSizeMake(self.view.frame.size.width, 900)];
+    [flexibleView addSubView:imageV];
+    [flexibleView setContentSize:CGSizeMake(self.view.frame.size.width, CGRectGetMaxY(imageV.frame)*2.5)];
     
     self.flexibleView = flexibleView;
     
@@ -58,13 +64,13 @@
 }
 - (void)flexibleParallaxViewDidScroll:(HUFlexibleParallaxView *)flexibleView {
     CGFloat offsetY = flexibleView.contentOffset.y;
-    NSLog(@"y:%f", offsetY);
+   // NSLog(@"y:%f", offsetY);
     if (offsetY >0) {
-        CGFloat tmp = (offsetY -64)/64;
-        CGFloat alpha = tmp > 1?0.9:tmp;
+        CGFloat alpha = (offsetY -64) / 64 ;
+        alpha = MIN(alpha, 0.9);
         [self.navigationController.navigationBar fs_setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:alpha]];
     } else {
-        [self.navigationController.navigationBar fs_setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0]];
+        [self.navigationController.navigationBar fs_setBackgroundColor:[UIColor clearColor]];
     }
 }
 
